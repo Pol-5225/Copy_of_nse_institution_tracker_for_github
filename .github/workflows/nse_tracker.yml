@@ -1,3 +1,11 @@
+name: NSE Institutional Tracker
+
+on:
+  workflow_dispatch:   # allows manual run
+
+  schedule:
+    - cron: "30 13 * * *"   # 7:00 PM IST (GitHub uses UTC)
+
 jobs:
   run-bot:
 
