@@ -1,10 +1,10 @@
 name: NSE Institutional Tracker
 
 on:
-  workflow_dispatch:   # allows manual run
+  workflow_dispatch:   # manual run
 
   schedule:
-    - cron: "0 14 * * *"   # 7:00 PM IST (GitHub uses UTC)
+    - cron: "0 14 * * *"   # 7:30 PM IST (GitHub uses UTC)
 
 jobs:
   run-bot:
@@ -14,6 +14,7 @@ jobs:
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       CHAT_ID: ${{ secrets.CHAT_ID }}
+      GROUP_CHAT_ID: ${{ secrets.GROUP_CHAT_ID }}
 
     steps:
 
