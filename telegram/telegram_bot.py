@@ -1,5 +1,6 @@
 import os
 import requests
+import time   # <-- added for delay
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -41,6 +42,9 @@ def send_message(message):
         data = resp.json()
         if not data.get("ok"):
             raise RuntimeError(f"Telegram error: {data}")
+
+        # 🔹 Prevent Telegram rate limit (429 error)
+        time.sleep(1)
 
     return True
 
