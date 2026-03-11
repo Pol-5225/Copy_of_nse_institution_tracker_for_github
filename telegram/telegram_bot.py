@@ -1,33 +1,32 @@
 import os
 import requests
 
-# Read values from GitHub secrets (environment variables)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-
 def send_message(message):
-    """
-    Send message to Telegram
-    """
+    print("BOT_TOKEN loaded:", bool(BOT_TOKEN))
+    print("CHAT_ID loaded:", bool(CHAT_ID))
 
-    print("BOT_TOKEN loaded:", BOT_TOKEN is not None)
-    print("CHAT_ID loaded:", CHAT_ID is not None)
+    if not BOT_TOKEN or not CHAT_ID:
+        raise RuntimeError("Missing BOT_TOKEN or CHAT_ID environment variable")
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-
     payload = {
         "chat_id": CHAT_ID,
-        "text": message
+        "text": message,
+        "parse_mode": "HTML"
     }
 
-    response = requests.post(url, data=payload)
+    resp = requests.post(url, data=payload, timeout=20)
+    print("Telegram API status:", resp.status_code)
+    print("Telegram API response:", resp.text)
 
-    print("Telegram API response:")
-    print(response.text)
+    data = resp.json()
+    if not data.get("ok"):
+        raise RuntimeError(f"Telegram error: {data}")
 
-    return response.json()
-
+    return data
 
 if __name__ == "__main__":
     send_message("Test message from NSE institutional tracker 🚀")
