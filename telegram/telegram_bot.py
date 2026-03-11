@@ -4,6 +4,10 @@ import requests
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
+# Safety check
+if not BOT_TOKEN or not CHAT_ID:
+    print("⚠ Telegram credentials missing. BOT_TOKEN or CHAT_ID not found.")
+
 def send_message(message):
     print("BOT_TOKEN loaded:", bool(BOT_TOKEN))
     print("CHAT_ID loaded:", bool(CHAT_ID))
