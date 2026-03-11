@@ -1,0 +1,15 @@
+# Ignore virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# PyCharm project settings
+.idea/
+
+# Ignore downloaded CSV files
+data/*.csv
+
+# Keep the data folder
+!data/.gitkeep
