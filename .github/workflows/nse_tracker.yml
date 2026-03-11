@@ -1,0 +1,63 @@
+name: NSE Institutional Tracker
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "30 13 * * *"   # 7:00 PM IST
+
+jobs:
+  run-bot:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Debug - Show repository structure
+        run: |
+          echo "Listing repository files:"
+          ls -R
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Debug - Check Python installation
+        run: |
+          python --version
+          pip --version
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Debug - Confirm data directory
+        run: |
+          echo "Checking data directory"
+          ls data || echo "Data directory not found"
+
+      - name: Debug - Check secrets availability
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          echo "Checking secrets presence..."
+          if [ -z "$BOT_TOKEN" ]; then echo "BOT_TOKEN NOT set"; else echo "BOT_TOKEN set"; fi
+          if [ -z "$CHAT_ID" ]; then echo "CHAT_ID NOT set"; else echo "CHAT_ID set"; fi
+
+      - name: Run NSE tracker
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          echo "Starting NSE tracker..."
+          python main.py
+
+      - name: Debug - Workflow finished
+        run: |
+          echo "Workflow completed successfully"
