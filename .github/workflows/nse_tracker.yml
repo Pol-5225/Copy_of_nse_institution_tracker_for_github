@@ -4,7 +4,7 @@ on:
   workflow_dispatch:   # manual run
 
   schedule:
-    - cron: "0 14 * * *"   # 7:30 PM IST (GitHub uses UTC)
+    - cron: "57 13 * * *"   # 7:30 PM IST (GitHub uses UTC)
 
 jobs:
   run-bot:
