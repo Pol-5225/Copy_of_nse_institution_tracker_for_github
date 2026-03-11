@@ -1,7 +1,7 @@
 name: NSE Institutional Tracker
 
 on:
-  workflow_dispatch:   # allows manual run
+  workflow_dispatch:
 
   schedule:
     - cron: "30 13 * * *"   # 7:00 PM IST (GitHub uses UTC)
@@ -16,22 +16,69 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Debug - Show repository structure
+        run: |
+          echo "Listing repository files:"
+          ls -R
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+
+      - name: Debug - Check Python installation
+        run: |
+          python --version
+          pip --version
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Debug - Show files
-        run: ls -R
+      - name: Debug - Confirm data directory
+        run: |
+          echo "Checking data directory"
+          ls data || echo "Data directory not found"
+
+      - name: Debug - Check secrets availability
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          echo "Checking secrets presence..."
+
+          if [ -z "$BOT_TOKEN" ]; then
+            echo "BOT_TOKEN is NOT set"
+          else
+            echo "BOT_TOKEN is set"
+          fi
+
+          if [ -z "$CHAT_ID" ]; then
+            echo "CHAT_ID is NOT set"
+          else
+            echo "CHAT_ID is set"
+          fi
+
+      - name: Debug - Check environment variables in Python
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python - <<EOF
+          import os
+          print("Python sees BOT_TOKEN:", os.getenv("BOT_TOKEN") is not None)
+          print("Python sees CHAT_ID:", os.getenv("CHAT_ID") is not None)
+          EOF
 
       - name: Run NSE tracker
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
+          echo "Starting NSE tracker..."
           python main.py
+
+      - name: Debug - Workflow finished
+        run: |
+          echo "Workflow completed successfully"
