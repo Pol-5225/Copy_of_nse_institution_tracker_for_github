@@ -2,8 +2,10 @@ import os
 import requests
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
-
+CHAT_ID = [
+    os.getenv("CHAT_ID"),        # your personal chat
+    os.getenv("GROUP_CHAT_ID")   # telegram group
+]
 # Safety check
 if not BOT_TOKEN or not CHAT_ID:
     print("⚠ Telegram credentials missing. BOT_TOKEN or CHAT_ID not found.")
